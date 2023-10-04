@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -40,6 +41,9 @@ public class PersonService implements UserDetailsService {
    * Creates a new person.
    */
   public Person create(Person person) {
+    String hashedPassword = new BCryptPasswordEncoder().encode(person.getPassword());
+    person.setPassword(hashedPassword);
+
     return personRepository.save(person);
   }
 

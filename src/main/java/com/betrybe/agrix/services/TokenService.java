@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,12 +22,12 @@ public class TokenService {
   /**
    * Gera um token a partir das informações do usuário.
    */
-  public String generateToken(Person person) {
+  public String generateToken(UserDetails userDetails) {
 
     Algorithm algorithm = Algorithm.HMAC256(secret);
     return JWT.create()
         .withIssuer("Agrix")
-        .withSubject(person.getUsername())
+        .withSubject(userDetails.getUsername())
         .withExpiresAt(expirationDate())
         .sign(algorithm);
   }
