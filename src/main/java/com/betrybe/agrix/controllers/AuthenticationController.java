@@ -40,15 +40,15 @@ public class AuthenticationController {
    * Recebe um username e senha e caso esteja tudo correto, envia um token de resposta.
    */
   @PostMapping("/login")
-  public TokenDto login(@RequestBody AuthenticationDto authenticationDto) {
-
+  public TokenDto login(@RequestBody AuthenticationDto authDTO) {
     UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(
-        authenticationDto.username(), authenticationDto.password()
+        authDTO.username(),
+        authDTO.password()
     );
 
     Authentication auth = authenticationManager.authenticate(usernamePassword);
 
-    UserDetails userDetails = (UserDetails) auth.getDetails();
+    UserDetails userDetails = (UserDetails) auth.getPrincipal();
     String token = tokenService.generateToken(userDetails);
 
     return new TokenDto(token);

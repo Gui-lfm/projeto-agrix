@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +49,12 @@ public class PersonService implements UserDetailsService {
   }
 
   @Override
-  public UserDetails loadUserByUsername(String username) throws PersonNotFoundException {
-    return personRepository.findByUsername(username);
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    Optional<Person> optionalPerson = personRepository.findByUsername(username);
+
+    if(optionalPerson.isEmpty()) {
+      throw new PersonNotFoundException();
+    }
+    return optionalPerson.get();
   }
 }
