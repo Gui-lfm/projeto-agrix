@@ -52,7 +52,7 @@ public class PersonService implements UserDetailsService {
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     Optional<Person> optionalPerson = personRepository.findByUsername(username);
 
-    if(optionalPerson.isEmpty()) {
+    if (optionalPerson.isEmpty()) {
       throw new PersonNotFoundException();
     }
     return optionalPerson.get();

@@ -48,7 +48,7 @@ public class FarmController {
    * Retorna uma lista com as fazendas armazendas no banco de dados.
    */
   @GetMapping
-  @Secured({"ADMIN", "MANAGER", "USER"})
+  @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
   public List<FarmDto> getAllFarms() {
     return service.getAllFarms()
         .stream()
