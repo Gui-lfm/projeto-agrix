@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
   private final AuthenticationManager authenticationManager;
-  private final PersonService personService;
   private final TokenService tokenService;
 
   /**
@@ -34,7 +33,6 @@ public class AuthenticationController {
   public AuthenticationController(AuthenticationManager authenticationManager,
       PersonService personService, TokenService tokenService) {
     this.authenticationManager = authenticationManager;
-    this.personService = personService;
     this.tokenService = tokenService;
   }
 
