@@ -4,6 +4,12 @@ import com.betrybe.agrix.controllers.dtos.CropResponseDto;
 import com.betrybe.agrix.controllers.dtos.FertilizerDto;
 import com.betrybe.agrix.models.entities.Crop;
 import com.betrybe.agrix.services.CropService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
 import java.util.List;
@@ -21,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Controller de crops.
  */
-@Tag(name = "Crop", description = "Gerenciamento de plantações presentes no banco de dados")
+@Tag(name = "Crop", description = "endpoints responsáveis pelo gerenciamento de plantações.")
 @RestController
 @RequestMapping(value = "/crops")
 public class CropController {
@@ -36,6 +42,25 @@ public class CropController {
   /**
    * Retorna uma lista com todas as plantações presentes no banco de dados.
    */
+  @Operation(
+      summary = "Retorna uma lista com todas as plantações presentes no banco de dados.",
+      description = "retorna uma lista de todas as plantações cadastradas. cada objeto da lista "
+          + "inclui o id, title, plantedArea, farmId, plantedDate e harvestDate"
+  )
+  @ApiResponses({
+      @ApiResponse(
+          responseCode = "200",
+          content = {
+              @Content(
+                  array = @ArraySchema(schema = @Schema(implementation = CropResponseDto.class)),
+                  mediaType = "application/json"
+              )
+          }),
+      @ApiResponse(
+          responseCode = "403",
+          content = {@Content(schema = @Schema())}
+      )
+  })
   @GetMapping
   @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
   public List<CropResponseDto> getCrops() {
@@ -47,6 +72,32 @@ public class CropController {
   /**
    * Caso exista, retorna a plantação indicada pelo id.
    */
+  @Operation(
+      summary = "Retorna a plantação pelo id.",
+      description = "Retorna uma plantação indicada pelo id, caso ela exista no banco de dados. O "
+          + "corpo do objeto contém um id, title, plantedArea, farmId, plantedDate e harvestDate."
+  )
+  @ApiResponses({
+      @ApiResponse(
+          responseCode = "200",
+          content = {
+              @Content(
+                  schema = @Schema(implementation = CropResponseDto.class),
+                  mediaType = "application/json"
+              )
+          }
+      ),
+      @ApiResponse(
+          responseCode = "404",
+          description = "Plantação não encontrada!",
+          content = {
+              @Content(
+                  schema = @Schema(implementation = String.class),
+                  mediaType = "text/plain"
+              )
+          }
+      )
+  })
   @GetMapping("/{id}")
   public ResponseEntity<CropResponseDto> getCropById(@PathVariable Long id) {
     Crop crop = service.getCropById(id);
