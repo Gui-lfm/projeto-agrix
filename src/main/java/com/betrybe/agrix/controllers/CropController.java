@@ -4,6 +4,7 @@ import com.betrybe.agrix.controllers.dtos.CropResponseDto;
 import com.betrybe.agrix.controllers.dtos.FertilizerDto;
 import com.betrybe.agrix.models.entities.Crop;
 import com.betrybe.agrix.services.CropService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Controller de crops.
  */
+@Tag(name = "Crop", description = "Gerenciamento de plantações presentes no banco de dados")
 @RestController
 @RequestMapping(value = "/crops")
 public class CropController {

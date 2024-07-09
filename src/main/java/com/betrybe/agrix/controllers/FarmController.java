@@ -6,6 +6,7 @@ import com.betrybe.agrix.controllers.dtos.FarmDto;
 import com.betrybe.agrix.models.entities.Crop;
 import com.betrybe.agrix.models.entities.Farm;
 import com.betrybe.agrix.services.FarmService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Camada controller de Farm.
  */
+@Tag(name = "Farm", description = "Gerenciamento das fazendas presentes no banco de dados")
 @RestController
 @RequestMapping(value = "/farms")
 public class FarmController {

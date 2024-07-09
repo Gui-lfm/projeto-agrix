@@ -3,7 +3,10 @@ package com.betrybe.agrix.controllers;
 import com.betrybe.agrix.controllers.dtos.FertilizerDto;
 import com.betrybe.agrix.models.entities.Fertilizer;
 import com.betrybe.agrix.services.FertilizerService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Camada controller de fertilizer.
  */
+@Tag(
+    name = "Fertilizer", description = "endpoints responsáveis pelo gerenciamento de fertilizantes."
+)
 @RestController
 @RequestMapping(value = "/fertilizers")
 public class FertilizerController {

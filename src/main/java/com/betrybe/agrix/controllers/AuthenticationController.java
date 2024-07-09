@@ -5,6 +5,7 @@ import com.betrybe.agrix.controllers.dtos.TokenDto;
 import com.betrybe.agrix.models.entities.Person;
 import com.betrybe.agrix.services.PersonService;
 import com.betrybe.agrix.services.TokenService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Controller que recebe os endpoints de autenticação de usuário.
  */
+@Tag(name = "Authentication", description = "endpoints de autenticação de usuário")
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {

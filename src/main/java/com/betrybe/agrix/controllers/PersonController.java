@@ -4,6 +4,7 @@ import com.betrybe.agrix.controllers.dtos.PersonDto;
 import com.betrybe.agrix.controllers.dtos.PersonResponseDto;
 import com.betrybe.agrix.models.entities.Person;
 import com.betrybe.agrix.services.PersonService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Camada controller de Person.
  */
+@Tag(name = "Person", description = "Adiciona uma pessoa usuária ao banco de dados.")
 @RestController
 @RequestMapping("/persons")
 public class PersonController {
