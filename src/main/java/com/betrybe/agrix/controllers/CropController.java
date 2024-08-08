@@ -43,7 +43,8 @@ public class CropController {
    * Retorna uma lista com todas as plantações presentes no banco de dados.
    */
   @Operation(
-      summary = "Retorna uma lista com todas as plantações presentes no banco de dados.",
+      summary = "Lista as plantações presentes no banco de dados. Necessário token de "
+          + "autorização para efetuar a operação e usuário com role ADMIN ou MANAGER",
       description = "retorna uma lista de todas as plantações cadastradas. cada objeto da lista "
           + "inclui o id, title, plantedArea, farmId, plantedDate e harvestDate"
   )
@@ -56,10 +57,8 @@ public class CropController {
                   mediaType = "application/json"
               )
           }),
-      @ApiResponse(
-          responseCode = "403",
-          content = {@Content(schema = @Schema())}
-      )
+      @ApiResponse(responseCode = "403", content = {@Content(schema = @Schema())}),
+      @ApiResponse(responseCode = "500", content = {@Content(schema = @Schema())})
   })
   @GetMapping
   @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
@@ -73,7 +72,8 @@ public class CropController {
    * Caso exista, retorna a plantação indicada pelo id.
    */
   @Operation(
-      summary = "Retorna a plantação pelo id.",
+      summary = "Retorna a plantação indicada pelo id (Caso exista). Necessário token de "
+          + "autorização para efetuar a operação.",
       description = "Retorna uma plantação indicada pelo id, caso ela exista no banco de dados. O "
           + "corpo do objeto contém um id, title, plantedArea, farmId, plantedDate e harvestDate."
   )
@@ -87,6 +87,7 @@ public class CropController {
               )
           }
       ),
+      @ApiResponse(responseCode = "403", content = {@Content(schema = @Schema())}),
       @ApiResponse(
           responseCode = "404",
           description = "Plantação não encontrada!",
@@ -96,7 +97,8 @@ public class CropController {
                   mediaType = "text/plain"
               )
           }
-      )
+      ),
+      @ApiResponse(responseCode = "500", content = {@Content(schema = @Schema())}),
   })
   @GetMapping("/{id}")
   public ResponseEntity<CropResponseDto> getCropById(@PathVariable Long id) {
@@ -108,6 +110,33 @@ public class CropController {
   /**
    * Recebe um id de plantação e um de fazenda para realizar a associação.
    */
+  @Operation(
+      summary = "Associa um fertilizante à plantação, indicados pelo  respectivos ids. "
+          + "Necessário token de autorização para efetuar a operação.",
+      description = "em caso de sucesso, retorna uma mensagem no corpo da resposta."
+  )
+  @ApiResponses({
+      @ApiResponse(
+          responseCode = "201",
+          description = "plantação associados com sucesso!",
+          content = {
+              @Content(
+                  schema = @Schema(implementation = String.class),
+                  mediaType = "text/plain"
+              )
+          }),
+      @ApiResponse(responseCode = "403", content = {@Content(schema = @Schema())}),
+      @ApiResponse(
+          responseCode = "404",
+          description = "Plantação ou fertilizante não encontrados. Verifique os ids informados.",
+          content = {
+              @Content(
+                  schema = @Schema(implementation = String.class),
+                  mediaType = "text/plain"
+              )
+          }),
+      @ApiResponse(responseCode = "500", content = {@Content(schema = @Schema())})
+  })
   @PostMapping("/{cropId}/fertilizers/{fertilizerId}")
   public ResponseEntity<String> associateFertilizerToCrop(
       @PathVariable Long cropId,
@@ -122,6 +151,33 @@ public class CropController {
   /**
    * Recebe um id de plantação e retorna uma lista de fertilizantes.
    */
+  @Operation(
+      summary = "Lista os fertilizantes da plantação indicada pelo id. "
+          + "Necessário token de autorização para efetuar a operação.",
+      description = "em caso de sucesso, retorna uma lista FertilizerDto, "
+          + "contendo os campos id, name, brand e composition"
+  )
+  @ApiResponses({
+      @ApiResponse(
+          responseCode = "200",
+          content = {
+              @Content(
+                  array = @ArraySchema(schema = @Schema(implementation = FertilizerDto.class)),
+                  mediaType = "application/json"
+              )
+          }),
+      @ApiResponse(responseCode = "403", content = {@Content(schema = @Schema())}),
+      @ApiResponse(
+          responseCode = "404",
+          description = "Plantação não encontrada!",
+          content = {
+              @Content(
+                  schema = @Schema(implementation = String.class),
+                  mediaType = "text/plain"
+              )
+          }),
+      @ApiResponse(responseCode = "500", content = {@Content(schema = @Schema())})
+  })
   @GetMapping("/{cropId}/fertilizers")
   public List<FertilizerDto> getCropFertilizers(@PathVariable Long cropId) {
     return service.getCropFertilizers(cropId)
@@ -133,6 +189,24 @@ public class CropController {
   /**
    * Retorna uma lista de plantações que estão com o HarvestDate entre as datas especificadas.
    */
+  @Operation(
+      summary = "Lista as plantações que estão com o HarvestDate entre as datas especificadas. "
+          + "Necessário token de autorização para efetuar a operação.",
+      description = "em caso de sucesso, retorna uma lista CropResponseDto, "
+          + "contendo os campos id, title, plantedArea, farmId, plantedDate e harvestDate."
+  )
+  @ApiResponses({
+      @ApiResponse(
+          responseCode = "200",
+          content = {
+              @Content(
+                  array = @ArraySchema(schema = @Schema(implementation = CropResponseDto.class)),
+                  mediaType = "application/json"
+              )
+          }),
+      @ApiResponse(responseCode = "403", content = {@Content(schema = @Schema())}),
+      @ApiResponse(responseCode = "500", content = {@Content(schema = @Schema())})
+  })
   @GetMapping("/search")
   public List<CropResponseDto> getCropsByDate(
       @RequestParam LocalDate start,
