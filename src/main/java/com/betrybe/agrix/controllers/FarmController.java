@@ -6,6 +6,12 @@ import com.betrybe.agrix.controllers.dtos.FarmDto;
 import com.betrybe.agrix.models.entities.Crop;
 import com.betrybe.agrix.models.entities.Farm;
 import com.betrybe.agrix.services.FarmService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +44,20 @@ public class FarmController {
   /**
    * Recebe os dados de uma fazenda e os adiciona ao banco de dados.
    */
+  @Operation(
+      summary = "Adiciona uma fazenda ao banco de dados. Necessário token de autorização "
+          + "para efetuar a operação",
+      description = "Retorna um objeto FarmDto contendo os campos id, name e size da fazenda"
+  )
+  @ApiResponse(
+      responseCode = "201",
+      content = {
+          @Content(
+              schema = @Schema(implementation = FarmDto.class),
+              mediaType = "application/json"
+          )
+      }
+  )
   @PostMapping
   public ResponseEntity<FarmDto> addFarm(@RequestBody FarmDto newFarm) {
     Farm farm = service.addFarm(newFarm.toFarm());
@@ -49,8 +69,23 @@ public class FarmController {
   /**
    * Retorna uma lista com as fazendas armazendas no banco de dados.
    */
+  @Operation(
+      summary = "Lista as fazendas presentes no banco de dados. Necessário token de autorização "
+          + "para efetuar a operação e usuário com role ADMIN ou MANAGER",
+      description = "Retorna uma lista de FarmDto, contendo os campos id, name e size"
+  )
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", content = {
+          @Content(
+              array = @ArraySchema(schema = @Schema(implementation = FarmDto.class)),
+              mediaType = "application/json"
+          )
+      }),
+      @ApiResponse(responseCode = "403", content = {@Content(schema = @Schema())}),
+      @ApiResponse(responseCode = "500", content = {@Content(schema = @Schema())}),
+  })
   @GetMapping
-  @Secured({"ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"})
+  @Secured({"ROLE_ADMIN", "ROLE_MANAGER"})
   public List<FarmDto> getAllFarms() {
     return service.getAllFarms()
         .stream()
@@ -61,6 +96,30 @@ public class FarmController {
   /**
    * Retorna a fazenda especificada pelo id (caso exista).
    */
+  @Operation(
+      summary = "Retorna a fazenda especificada pelo id (caso exista). Necessário token de "
+          + "autorização para efetuar a operação.",
+      description = "Retorna um objeto FarmDto, contendo os campos id, name e size."
+  )
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", content = {
+          @Content(
+              schema = @Schema(implementation = FarmDto.class),
+              mediaType = "application/json"
+          )
+      }),
+      @ApiResponse(responseCode = "403", content = {@Content(schema = @Schema())}),
+      @ApiResponse(responseCode = "404",
+          description = "Fazenda não encontrada!",
+          content = {
+              @Content(
+                  schema = @Schema(implementation = String.class),
+                  mediaType = "text/plain"
+              )
+          }
+      ),
+      @ApiResponse(responseCode = "500", content = {@Content(schema = @Schema())}),
+  })
   @GetMapping("/{id}")
   public ResponseEntity<FarmDto> getFarmById(@PathVariable Long id) {
     Optional<Farm> optionalFarm = service.getFarmById(id);
@@ -74,6 +133,31 @@ public class FarmController {
   /**
    * Adiciona uma plantação à fazenda indicada pelo id.
    */
+  @Operation(
+      summary = "Adiciona uma plantação à fazenda indicada pelo id. Necessário token de "
+          + "autorização para efetuar a operação.",
+      description = "Retorna um objeto CropResponseDto, contendo os campos name, plantedArea, id, "
+          + "farmId, plantedDate e harvestDate."
+  )
+  @ApiResponses({
+      @ApiResponse(responseCode = "201", content = {
+          @Content(
+              schema = @Schema(implementation = CropResponseDto.class),
+              mediaType = "application/json"
+          )
+      }),
+      @ApiResponse(responseCode = "403", content = {@Content(schema = @Schema())}),
+      @ApiResponse(responseCode = "404",
+          description = "Fazenda não encontrada!",
+          content = {
+              @Content(
+                  schema = @Schema(implementation = String.class),
+                  mediaType = "text/plain"
+              )
+          }
+      ),
+      @ApiResponse(responseCode = "500", content = {@Content(schema = @Schema())}),
+  })
   @PostMapping("/{farmId}/crops")
   public ResponseEntity<CropResponseDto> createCrop(@PathVariable Long farmId,
       @RequestBody CropDto newCrop) {
@@ -88,6 +172,30 @@ public class FarmController {
   /**
    * Retorna todas as plantações da fazenda indicada pelo id.
    */
+  @Operation(
+      summary = "Lista as plantações da fazenda indicada pelo id. Necessário token de autorização",
+      description = "Retorna uma lista de CropResponseDto, contendo os campos name, "
+          + "plantedArea, id, farmId, plantedDate e harvestDate."
+  )
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", content = {
+          @Content(
+              array = @ArraySchema(schema = @Schema(implementation = CropResponseDto.class)),
+              mediaType = "application/json"
+          )
+      }),
+      @ApiResponse(responseCode = "403", content = {@Content(schema = @Schema())}),
+      @ApiResponse(responseCode = "404",
+          description = "Fazenda não encontrada!",
+          content = {
+              @Content(
+                  schema = @Schema(implementation = String.class),
+                  mediaType = "text/plain"
+              )
+          }
+      ),
+      @ApiResponse(responseCode = "500", content = {@Content(schema = @Schema())}),
+  })
   @GetMapping("/{farmId}/crops")
   public List<CropResponseDto> getCrops(@PathVariable Long farmId) {
     return service.getCropsFromFarm(farmId).stream()
