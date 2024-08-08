@@ -5,6 +5,11 @@ import com.betrybe.agrix.controllers.dtos.TokenDto;
 import com.betrybe.agrix.models.entities.Person;
 import com.betrybe.agrix.services.PersonService;
 import com.betrybe.agrix.services.TokenService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +46,25 @@ public class AuthenticationController {
   /**
    * Recebe um username e senha e caso esteja tudo correto, envia um token de resposta.
    */
+  @Operation(
+      summary = "Realiza o login de pessoa usuária cadastrada",
+      description = "caso usuário exista, retorna um token que será usado em outras operações"
+  )
+  @ApiResponses({
+      @ApiResponse(
+          responseCode = "200",
+          content = {
+              @Content(
+                  schema = @Schema(implementation = TokenDto.class),
+                  mediaType = "application/json"
+              )
+          }),
+      @ApiResponse(
+          responseCode = "403",
+          content = { @Content(schema = @Schema())}
+
+      )
+  })
   @PostMapping("/login")
   public TokenDto login(@RequestBody AuthenticationDto authenticationDto) {
     UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(
