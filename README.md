@@ -184,3 +184,17 @@ no link: `http://localhost:8080/swagger-ui/index.html/`
 - Em caso de sucesso, retorna o status http `200` e um objeto contendo os dados do fertilizante presente no banco de dados.
 - Caso o usuário não possua a autorização necessária ou caso a mesma esteja inválida, retorna uma mensagem de erro com o status http `403`.
 - Se não for encontrado um fertilizante com o id especificado, retorna uma mensagem de erro com um status http `404`.
+
+## 👾Autor
+
+ <a href="https://github.com/Gui-lfm">
+ <img style="border-radius: 50%;" src="https://avatars.githubusercontent.com/u/72154970?v=4" width="100px;" alt=""/>
+ <br />
+ <sub><b>Guilherme Lucena</b></sub></a>
+
+### ✉contato
+
+<div>
+  <a href="mailto:guilherme.lucena17@gmail.com" target="_blank"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" target="_blank"/></a>
+  <a href="https://www.linkedin.com/in/gui-lucena/" target="_blank"><img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"/></a>
+</div>
